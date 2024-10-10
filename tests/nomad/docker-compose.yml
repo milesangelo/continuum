@@ -1,0 +1,7 @@
+version: '3.8'
+services:
+  nomad:
+    build: .
+    ports:
+      - "4646:4646"  # Nomad Web UI
+      - "4647:4647"  # Nomad Client Communication

@@ -1,0 +1,8 @@
+version: '3.8'
+services:
+  vault:
+    build: .
+    environment:
+      VAULT_DEV_ROOT_TOKEN_ID: root
+    ports:
+      - "8200:8200"  # Vault Web UI
