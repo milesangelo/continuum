@@ -1,0 +1,7 @@
+{
+  "service": {
+    "name": "api-service",
+    "port": 8080,
+    "tags": ["api"]
+  }
+}

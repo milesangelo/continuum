@@ -1,0 +1,45 @@
+services:
+  nomad:
+    image: hashicorp/nomad:latest
+    container_name: nomad
+    volumes:
+      - ./nomad:/etc/nomad.d
+    command: agent -dev -config=/etc/nomad.d
+
+  consul:
+    image: hashicorp/consul:latest
+    container_name: consul
+    volumes:
+      - ./consul:/etc/consul.d
+    command: agent -dev -client=0.0.0.0
+
+  vault:
+    image: hashicorp/vault:latest
+    container_name: vault
+    volumes:
+      - ./vault:/vault/config
+    command: server -dev -dev-root-token-id=root
+
+  levant:
+    image: jrasell/levant:latest
+    container_name: levant
+    depends_on:
+      - nomad
+    volumes:
+      - ./levant:/levant
+    command: levant deploy /levant/app.hcl
+
+  dotnet-api:
+    image: your-docker-registry/your-dotnet-api-service:latest
+    container_name: dotnet-api
+    depends_on:
+      - consul
+      - vault
+    environment:
+      CONSUL_HTTP_ADDR: http://consul:8500
+      VAULT_ADDR: http://vault:8200
+      NOMAD_ADDR: http://nomad:4646
+    ports:
+      - "5000:80"
+    volumes:
+      - ./config:/app/config

@@ -1,0 +1,1 @@
+vault kv put db/creds username=admin password=adminpassword
